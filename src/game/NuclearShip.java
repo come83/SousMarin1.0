@@ -88,6 +88,8 @@ public class NuclearShip {
                 setX((getX()+speed));
             }
         }
+       // System.out.println("x"+getX());
+       // System.out.println("y"+getY());
     }
 
 

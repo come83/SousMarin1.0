@@ -27,12 +27,18 @@ public class GamePannel extends JPanel implements Runnable{
     List<BulletNuclear> lesBulletNuclear = new ArrayList<BulletNuclear>();
     List<BulletWar> lesBulletWar = new ArrayList<BulletWar>();
 
+    public boolean collisonNuclear = false;
+    public boolean collisionWar = false;
+    public boolean isExplosed = false;
+    Explosion explosion;
+
     public GamePannel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.white);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
+
     }
 
     public void startGameThread() {
@@ -49,6 +55,13 @@ public class GamePannel extends JPanel implements Runnable{
 
             update();
             repaint();
+            if(collisionWar || collisonNuclear){
+                System.out.println("fin partie ");
+
+                result();
+                repaint();
+                break;
+            }
 
             try {
                 double remainingTime = nextDrawTime - System.nanoTime();
@@ -64,6 +77,22 @@ public class GamePannel extends JPanel implements Runnable{
         }
     }
 
+    public void result(){
+        if(collisonNuclear){
+            System.out.println("Le Joueur Gauche Gagne ! ");
+            explosion = new Explosion(this,warShip.getX(),warShip.getY());
+            isExplosed = true;
+         //   lesBulletNuclear.remove((lesBulletNuclear.size()-1));
+
+        }
+        else if(collisionWar){
+            System.out.println("Le Joueur Droit Gagne ! ");
+            explosion = new Explosion(this,nuclearShip.getX(),nuclearShip.getY());
+            isExplosed = true;
+           // lesBulletWar.remove((lesBulletWar.size()-1  ));
+
+        }
+    }
 
     public void update() {
 
@@ -78,6 +107,22 @@ public class GamePannel extends JPanel implements Runnable{
             }
             lesBulletNuclear.add(new BulletNuclear(this, keyH,totox,totoy,nuclearShip.getDirection(), nuclearShip));
             lesBulletNuclear.get(keyH.spacePressedCount-1).update();
+
+          //  System.out.println("#########################################################");
+          //  System.out.println("xb"+lesBulletNuclear.get(keyH.spacePressedCount-1).getX());
+          //  System.out.println("yb"+lesBulletNuclear.get(keyH.spacePressedCount-1).getY());
+          //  System.out.println("xs"+warShip.getX());
+          //  System.out.println("yx"+warShip.getY());
+
+            if( (lesBulletNuclear.get(keyH.spacePressedCount-1).getX()  <= (warShip.getX() + 25))  &&
+                    (lesBulletNuclear.get(keyH.spacePressedCount-1).getX() >= (warShip.getX() - 25)) &&
+                    (lesBulletNuclear.get(keyH.spacePressedCount-1).getY() <= (warShip.getY() + 25)) &&
+                    (lesBulletNuclear.get(keyH.spacePressedCount-1).getY() >= (warShip.getY() - 25))
+            ){
+                System.out.println("touché");
+                collisonNuclear = true;
+            }
+
         }
         if(keyH.controlPressed) {
             int titix = warShip.getX();
@@ -87,6 +132,16 @@ public class GamePannel extends JPanel implements Runnable{
             }
             lesBulletWar.add(new BulletWar(this, keyH,titix,titiy,warShip.getDirection(), warShip));
             lesBulletWar.get(keyH.controlPressedCount-1).update();
+
+            if( (lesBulletWar.get(keyH.controlPressedCount-1).getX()  <= (nuclearShip.getX() + 25))  &&
+                    (lesBulletWar.get(keyH.controlPressedCount-1).getX() >= (nuclearShip.getX() - 25)) &&
+                    (lesBulletWar.get(keyH.controlPressedCount-1).getY() <= (nuclearShip.getY() + 25)) &&
+                    (lesBulletWar.get(keyH.controlPressedCount-1).getY() >= (nuclearShip.getY() - 25))
+            ){
+                System.out.println("touché");
+                collisionWar = true;
+            }
+
         }
 
     }
@@ -99,6 +154,9 @@ public class GamePannel extends JPanel implements Runnable{
 
         nuclearShip.draw(g2);
         warShip.draw(g2);
+        if(isExplosed){
+            explosion.draw(g2);
+        }
 
         if(keyH.spacePressed){
             lesBulletNuclear.get(keyH.spacePressedCount-1).draw(g2);

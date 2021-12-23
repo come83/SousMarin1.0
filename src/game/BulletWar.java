@@ -43,11 +43,11 @@ public class BulletWar{
     }
 
     public int getX() {
-        return x;
+        return toto;
     }
 
     public int getY() {
-        return y;
+        return titi;
     }
 
     public void setSpeed(){
@@ -88,8 +88,8 @@ public class BulletWar{
 
     public void draw(Graphics2D g2){
         BufferedImage image = bullet;
-        System.out.println("draw x"+toto);
-        System.out.println("draw y"+titi);
+       // System.out.println("draw x"+toto);
+       // System.out.println("draw y"+titi);
         g2.drawImage(image, toto, titi, gp.tileSize, gp.tileSize, null);
     }
 

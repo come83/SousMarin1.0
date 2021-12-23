@@ -14,7 +14,7 @@ sur le même clavier.
 ### But du jeu
 
 Les joueurs peuvent tirer des torpilles, le premier
-à toucher l'autre gagne.
+qui touche l'autre gagne.
 
 <img src="medias/ui.png">
 
